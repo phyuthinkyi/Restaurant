@@ -1,71 +1,36 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { SafeAreaView, View, Text, Image, Dimensions, FlatList, TouchableOpacity } from 'react-native'
 import HeraderComponent from "../components/HeaderComponent";
 import BottomTabComponent from "../components/BottomTabComponent";
 import colors from "../constants/colors";
 
 const width = Dimensions.get('screen').width
-const arrList  = ['arr1', 'arr2', 'arr3'];
-const prodList = [
-    {
-        prodName: 'Pumpkin Soup',
-        image: require('../../assets/images/profile.jpeg'),
-        madeIn: 'Myanmar',
-        price: '1500 MMK',
-        arr: ['arr1', 'arr2', 'arr3']
-    },
-    {
-        prodName: 'Vegetable Soup',
-        image: require('../../assets/images/profile.jpeg'),
-        madeIn: 'Thailand',
-        price: '2500 MMK',
-        arr: ['arr1', 'arr2', 'arr3']
-    },
-    {
-        prodName: 'Pumpkin Soup',
-        image: require('../../assets/images/profile.jpeg'),
-        madeIn: 'Myanmar',
-        price: '1500 MMK',
-        arr: ['arr1', 'arr2', 'arr3']
-    },
-    {
-        prodName: 'Vegetable Soup',
-        image: require('../../assets/images/profile.jpeg'),
-        madeIn: 'Thailand',
-        price: '2500 MMK',
-        arr: ['arr1', 'arr2', 'arr3']
-    },
-    {
-        prodName: 'Pumpkin Soup',
-        image: require('../../assets/images/profile.jpeg'),
-        madeIn: 'Myanmar',
-        price: '1500 MMK',
-        arr: ['arr1', 'arr2', 'arr3']
-    },
-    {
-        prodName: 'Vegetable Soup',
-        image: require('../../assets/images/profile.jpeg'),
-        madeIn: 'Thailand',
-        price: '2500 MMK',
-        arr: ['arr1', 'arr2', 'arr3']
-    },
-    {
-        prodName: 'Pumpkin Soup',
-        image: require('../../assets/images/profile.jpeg'),
-        madeIn: 'Myanmar',
-        price: '1500 MMK',
-        arr: ['arr1', 'arr2', 'arr3']
-    },
-    {
-        prodName: 'Vegetable Soup',
-        image: require('../../assets/images/profile.jpeg'),
-        madeIn: 'Thailand',
-        price: '2500 MMK',
-        arr: ['arr1', 'arr2', 'arr3']
-    }
-]
+//https://mobidevzoneshopapi.herokuapp.com/api/products
 
 const HomeScreen = ({ navigation, route }) => {
+    const [products, setProducts] = useState([])
+    // let products = []
+
+    useEffect(() => {
+        // fetch('https://mobidevzoneshopapi.herokuapp.com/api/products')
+        // .then((response) => response.json())
+        // .then((products) => {
+        //   console.log("Products..", products)
+        //   setProducts(products)
+        // })
+        // .catch((error) => {
+        //   console.error(error);
+        // });
+
+        const getProductList = async () => {
+            const response  = await fetch('https://mobidevzoneshopapi.herokuapp.com/api/products')
+            const resJsonData = await response.json()
+            setProducts(resJsonData)
+        }
+
+        getProductList()
+    }, [])
+
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -73,11 +38,11 @@ const HomeScreen = ({ navigation, route }) => {
             <View style={{flex: 1, padding: 18 }}>
                 <Text style={{ fontSize: 24, fontWeight: 'bold', color: colors.primaryColor }}>Popular Items</Text>
                 <FlatList
-                    data={prodList}
+                    data={products}
                     renderItem={({ item, index }) => {
                         return (
                             <TouchableOpacity onPress={() => navigation.navigate('ProductDetail', {
-                                SArr: prodList,
+                                SArr: products,
                                 product: item
                             })} key={index} style={{
                                 flexDirection: 'row', backgroundColor: colors.white, borderRadius: 10,
@@ -87,12 +52,12 @@ const HomeScreen = ({ navigation, route }) => {
                                     width: width / 4 + 10, height: width / 4 + 10, borderRadius: 10,
                                     justifyContent: 'center', alignItems: 'center'
                                 }}>
-                                    <Image source={item.image} resizeMode="cover" style={{ width: "100%", height: "100%", 
+                                    <Image source={{uri: item.imgUrl }} resizeMode="cover" style={{ width: "100%", height: "100%", 
                                     borderRadius: 10 }} />
                                 </View>
                                 <View style={{flex: 1, marginLeft: 10 }}>
-                                    <Text style={{ fontSize: 20, color: colors.darkGray, fontWeight: 'bold' }}>{item.prodName}</Text>
-                                    <Text style={{ fontSize: 14, color: colors.primaryColor }}>(Made in {item.madeIn})</Text>
+                                    <Text style={{ fontSize: 20, color: colors.darkGray, fontWeight: 'bold' }}>{item.productName}</Text>
+                                    <Text style={{ fontSize: 14, color: colors.primaryColor }}>(Made in Myanmar)</Text>
                                     <Text style={{ marginTop: 15, fontSize: 16, color: colors.primaryColor }}>{item.price}</Text>
                                 </View>
                                 <View style={{
