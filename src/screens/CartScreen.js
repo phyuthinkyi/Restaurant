@@ -70,6 +70,7 @@ const CartScreen = ({ navigation, route }) => {
             <HeaderComponent navigation={navigation} title="Cart" iconName="menu" />
             <View style={{ flex: 1, paddingHorizontal: 18 }}>
                 <FlatList
+                    style={{ flex: 1 }}
                     data={prodList}
                     renderItem={({ item, index }) => {
                         return (
@@ -108,6 +109,7 @@ const CartScreen = ({ navigation, route }) => {
                         </TouchableOpacity>
                     }
                 />
+
 
             </View>
             <BottomTabComponent navigation={navigation} screenName="Cart" />

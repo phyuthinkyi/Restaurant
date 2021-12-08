@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import { SafeAreaView, View, Text, Image, TouchableOpacity, FlatList, StyleSheet, Dimensions } from 'react-native'
 import HeaderComponent from '../components/HeaderComponent'
 import color from '../constants/colors'
@@ -54,6 +54,18 @@ const prodList = [
     }
 ]
 const LatestItemScreen = ({ navigation, route }) => {
+    const [latestProducts, setLatestproducts] = useState([])
+
+    useEffect(() => {
+        const getLatestProductList = async () => {
+            const resp = await fetch('https://mobidevzoneshopapi.herokuapp.com/api/products')
+            const latestList = await resp.json()
+            setLatestproducts(latestList)
+        }
+
+        getLatestProductList()
+    }, [])
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <HeaderComponent navigation={navigation} menu="back" title="Latest Items" />

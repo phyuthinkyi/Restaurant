@@ -1,7 +1,8 @@
-import React from 'react'
-import { SafeAreaView, View, Text, StyleSheet, Image } from 'react-native'
+import React,{useState} from 'react'
+import { SafeAreaView, View, Text, StyleSheet, Image, TextInput, TouchableOpacity} from 'react-native'
 import HeaderComponent from '../components/HeaderComponent'
 import color from '../constants/colors'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const arr = [
   "Mobile Software Development Training Center",
@@ -11,6 +12,26 @@ const arr = [
 ]
 
 const AboutUsScreen = ({ navigation, route }) => {
+  const [data, setData] = useState("")
+  const [collectData, setCollectData] = useState("")
+
+  const saveToAsycStorage = (data) => {
+    console.log("DATA is", data)
+    AsyncStorage.setItem('data', JSON.stringify(data))
+  }
+
+  const getDataFromAsyncStorage = async () => {
+      const res = await AsyncStorage.getItem('data')
+      const collData = JSON.parse(res)
+
+      console.log("Data..", collData)
+      setCollectData(collData)
+  }
+
+  const removeDataFromAsyncStorage  =  () => {
+    AsyncStorage.removeItem('data')
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <HeaderComponent title="About Us" navigation={navigation} menu="back" />
@@ -21,7 +42,35 @@ const AboutUsScreen = ({ navigation, route }) => {
           <Text style={styles.aboutUsText}>Contact Us</Text>
         </View>
 
-        {
+        <View style={{padding: 20}}>
+            <TextInput
+                style={{height: 45, borderColor:'#000', borderWidth: 1}}
+                onChangeText={text => setData(text)}
+            />
+            <TouchableOpacity onPress={() => {
+                saveToAsycStorage(data)
+            }}  style={{marginVertical: 20, paddingVertical: 8, paddingHorizontal: 18,  justifyContent:  'center', alignItems: 'center',backgroundColor: '#33aacc'}}>
+              <Text>Save to Async Storage</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => {
+                getDataFromAsyncStorage()
+            }}  style={{marginVertical: 20, paddingVertical: 8, paddingHorizontal: 18,  justifyContent:  'center', alignItems: 'center',backgroundColor: '#33aacc'}}>
+              <Text>Get Data from Async Storage</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => {
+                removeDataFromAsyncStorage()
+            }}  style={{marginVertical: 20, paddingVertical: 8, paddingHorizontal: 18,  justifyContent:  'center', alignItems: 'center',backgroundColor: '#33aacc'}}>
+              <Text>Remove Data from Async Storage</Text>
+            </TouchableOpacity>
+
+            <Text style={{marginVertical: 15}}>{collectData}</Text>
+
+
+        </View>
+
+        {/* {
           arr.map((item, index) => {
             return (
               <View key={index} style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 15, paddingVertical: 10, marginTop: 10, }}>
@@ -30,7 +79,7 @@ const AboutUsScreen = ({ navigation, route }) => {
               </View>
             )
           })
-        }
+        } */}
 
       </View>
     </SafeAreaView>

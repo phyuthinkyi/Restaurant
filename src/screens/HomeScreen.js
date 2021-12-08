@@ -85,14 +85,13 @@ const HomeScreen = ({ navigation, route }) => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <HeraderComponent navigation={navigation} title="Home" iconName="menu" />
-            <View style={{ flex: 1, padding: 18 }}>
+            <View style={{ flex: 1, paddingHorizontal: 18 }}>
                 <Text style={{ fontSize: 24, fontWeight: 'bold', color: colors.primaryColor }}>Popular Items</Text>
                 <FlatList
                     data={products}
                     renderItem={({ item, index }) => {
                         return (
                             <TouchableOpacity onPress={() => navigation.navigate('ProductDetail', {
-                                SArr: products,
                                 product: item
                             })} key={index} style={{
                                 flexDirection: 'row', backgroundColor: colors.white, borderRadius: 10,
@@ -109,7 +108,7 @@ const HomeScreen = ({ navigation, route }) => {
                                 </View>
                                 <View style={{ flex: 1, marginLeft: 10 }}>
                                     <Text style={{ fontSize: 20, color: colors.darkGray, fontWeight: 'bold' }}>{item.productName}</Text>
-                                    <Text style={{ fontSize: 14, color: colors.primaryColor }}>(Made in Myanmar)</Text>
+                                    <Text style={{ fontSize: 14, color: colors.primaryColor, marginTop: 5 }}>(Made in Myanmar)</Text>
                                     <Text style={{ marginTop: 15, fontSize: 16, color: colors.primaryColor }}>{item.price}</Text>
                                 </View>
                                 <View style={{
