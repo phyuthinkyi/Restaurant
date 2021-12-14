@@ -1,43 +1,89 @@
-import React from 'react'
-import { SafeAreaView, View, Text, Image, StyleSheet } from 'react-native'
+import React,{useState} from 'react'
+import { SafeAreaView, View, Text, StyleSheet, Image, TextInput, TouchableOpacity} from 'react-native'
 import HeaderComponent from '../components/HeaderComponent'
 import color from '../constants/colors'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
-const ContactUsScreen = ({ navigation, route }) => {
+const arr = [
+  "Mobile Software Development Training Center",
+  "Practice and apply knowledge faster in real-world scenarios with projects and interactive courses.",
+  "Curate and share Pluralsight content to reach your learning goals faster.",
+  "We help you quickly and easily experiment, build UIs, add features, and fix bugs faster."
+]
+
+const AboutUsScreen = ({ navigation, route }) => {
+  const [data, setData] = useState("")
+  const [collectData, setCollectData] = useState("")
+
+  const saveToAsycStorage = (data) => {
+    console.log("DATA is", data)
+    AsyncStorage.setItem('name', JSON.stringify(data))
+  }
+
+  const getDataFromAsyncStorage = async () => {
+      const res = await AsyncStorage.getItem('name')
+      const collData = JSON.parse(res)
+
+      console.log("Data..", collData)
+      setCollectData(collData)
+  }
+
+  const removeDataFromAsyncStorage  =  () => {
+    AsyncStorage.removeItem('name')
+  }
+
   return (
     <SafeAreaView style={styles.container}>
-      <HeaderComponent navigation={navigation} menu="back" title="Contact Us" />
+      <HeaderComponent title="About Us" navigation={navigation} menu="back" />
       <View style={styles.content}>
-        <View style={styles.contactUsContainer}>
-          <Image style={styles.contactUsImg}
+        <View style={styles.aboutUsContainer}>
+          <Image style={styles.aboutUsImg}
             source={require('../../assets/images/icons/contact.png')} />
-          <Text style={styles.contactUsText}>Contact Us</Text>
+          <Text style={styles.aboutUsText}>Contact Us</Text>
         </View>
-        <View style={styles.contactUsInfoContainer}>
-          <Image style={styles.infoImg} 
-          source={require('../../assets/images/icons/marker.png')} />
-          <Text style={styles.infoText}>No.403, 4th Floor, Diamond Condo, Tower A, Kamayut Tsp, Yangon, Myanmar</Text>
 
-          <Image style={styles.infoImg} 
-          source={require('../../assets/images/icons/phone.png')} />
-          <Text style={styles.infoText}>(+959) 9798882724</Text>
+        <View style={{padding: 20}}>
+            <TextInput
+                style={{height: 45, borderColor:'#000', borderWidth: 1}}
+                onChangeText={text => setData(text)}
+            />
+            <TouchableOpacity onPress={() => {
+                saveToAsycStorage(data)
+            }}  style={{marginVertical: 20, paddingVertical: 8, paddingHorizontal: 18,  justifyContent:  'center', alignItems: 'center',backgroundColor: '#33aacc'}}>
+              <Text>Save to Async Storage</Text>
+            </TouchableOpacity>
 
-          <Image style={styles.infoImg} 
-          source={require('../../assets/images/icons/email.png')} />
-          <Text style={styles.infoText}>mobidevzonetech@gmail.com</Text>
+            <TouchableOpacity onPress={() => {
+                getDataFromAsyncStorage()
+            }}  style={{marginVertical: 20, paddingVertical: 8, paddingHorizontal: 18,  justifyContent:  'center', alignItems: 'center',backgroundColor: '#33aacc'}}>
+              <Text>Get Data from Async Storage</Text>
+            </TouchableOpacity>
 
-          <Image style={styles.infoImg} 
-          source={require('../../assets/images/icons/time.png')} />
-          <Text style={styles.infoText}>Open Time - 9 : 00 AM</Text>
-          <Text style={styles.infoText}>Close Time - 6 : 00 PM</Text>
+            <TouchableOpacity onPress={() => {
+                removeDataFromAsyncStorage()
+            }}  style={{marginVertical: 20, paddingVertical: 8, paddingHorizontal: 18,  justifyContent:  'center', alignItems: 'center',backgroundColor: '#33aacc'}}>
+              <Text>Remove Data from Async Storage</Text>
+            </TouchableOpacity>
+            <Text style={{marginVertical: 15}}>{collectData}</Text>
         </View>
+
+        {/* {
+          arr.map((item, index) => {
+            return (
+              <View key={index} style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 15, paddingVertical: 10, marginTop: 10, }}>
+                <View style={{ width: 20, height: 20, backgroundColor: color.primaryColor }}></View>
+                <Text style={{ flex: 1, marginLeft: 15, fontSize: 16, color: color.darkGray }}>{item}</Text>
+              </View>
+            )
+          })
+        } */}
 
       </View>
     </SafeAreaView>
   )
 }
 
-export default ContactUsScreen
+export default AboutUsScreen
 
 const styles = StyleSheet.create({
   container: {
@@ -46,37 +92,19 @@ const styles = StyleSheet.create({
   content: {
     flex: 1
   },
-  contactUsContainer: {
+  aboutUsContainer: {
     backgroundColor: color.primaryColor,
     padding: 20,
     justifyContent: 'center',
     alignItems: 'center'
   },
-  contactUsImg: {
+  aboutUsImg: {
     width: 80,
     height: 80
   },
-  contactUsText: {
+  aboutUsText: {
     color: color.white,
     fontSize: 20,
     fontWeight: 'bold'
   },
-  contactUsInfoContainer: {
-    flex: 1,
-    alignItems: 'center',
-    paddingHorizontal: 15
-  },
-  infoImg: {
-    width: 30,
-    height: 30,
-    tintColor: color.primaryColor,
-    marginTop: 20
-  },
-  infoText: { 
-    color: color.darkGray, 
-    fontSize: 16, 
-    textAlign: 'center', 
-    marginTop: 10
-  }
-
 })

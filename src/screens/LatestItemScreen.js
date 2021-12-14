@@ -72,16 +72,19 @@ const LatestItemScreen = ({ navigation, route }) => {
             <View style={{ flex: 1 }}>
                 <FlatList
                     numColumns={2}
-                    data={prodList}
+                    data={latestProducts}
                     renderItem={({ item, index }) => {
                         return (
                             <View style={styles.cardCtn}>
                                 <View style={styles.imgCtn}>
                                     <View style={{ width: 100, height: 80 }}>
-                                        <Image style={{ width: '100%', height: '100%' }} source={item.image} />
+                                    <Image source={{ uri: item.imgUrl }} resizeMode="cover" style={{
+                                        width: "100%", height: "100%",
+                                        borderRadius: 10
+                                    }} />
                                     </View>
 
-                                    <Text style={styles.prodNameTxt}>{item.prodName}</Text>
+                                    <Text style={styles.prodNameTxt}>{item.productName}</Text>
                                     <Text style={styles.priceTxt}>{item.price} MMK</Text>
 
                                     <View style={styles.qtyContainer}>
