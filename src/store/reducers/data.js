@@ -13,3 +13,8 @@ const DataReducer = (state = initialState, action) => {
 }
 
 export default DataReducer
+
+///UI => Actions (define type and carry data) => Reducer (according to action type, Process => return) =>
+/// combineReducer (create Root Reducer) => Store => UI
+
+

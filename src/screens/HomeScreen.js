@@ -3,64 +3,16 @@ import { SafeAreaView, View, Text, Image, Dimensions, FlatList, TouchableOpacity
 import HeraderComponent from "../components/HeaderComponent";
 import BottomTabComponent from "../components/BottomTabComponent";
 import colors from "../constants/colors";
-
-const prodList = [
-    {
-        prodName: 'Pumpkin Soup',
-        image: require('../../assets/images/profile.jpeg'),
-        madeIn: 'Myanmar',
-        price: '1500 MMK',
-    },
-    {
-        prodName: 'Vegetable Soup',
-        image: require('../../assets/images/profile.jpeg'),
-        madeIn: 'Thailand',
-        price: '2500 MMK',
-    },
-    {
-        prodName: 'Pumpkin Soup',
-        image: require('../../assets/images/profile.jpeg'),
-        madeIn: 'Myanmar',
-        price: '1500 MMK',
-    },
-    {
-        prodName: 'Vegetable Soup',
-        image: require('../../assets/images/profile.jpeg'),
-        madeIn: 'Thailand',
-        price: '2500 MMK',
-    },
-    {
-        prodName: 'Pumpkin Soup',
-        image: require('../../assets/images/profile.jpeg'),
-        madeIn: 'Myanmar',
-        price: '1500 MMK',
-    },
-    {
-        prodName: 'Vegetable Soup',
-        image: require('../../assets/images/profile.jpeg'),
-        madeIn: 'Thailand',
-        price: '2500 MMK',
-    },
-    {
-        prodName: 'Pumpkin Soup',
-        image: require('../../assets/images/profile.jpeg'),
-        madeIn: 'Myanmar',
-        price: '1500 MMK',
-    },
-    {
-        prodName: 'Vegetable Soup',
-        image: require('../../assets/images/profile.jpeg'),
-        madeIn: 'Thailand',
-        price: '2500 MMK',
-    }
-]
+import {useDispatch} from 'react-redux'
+import cartAction from "../store/actions/cart";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const width = Dimensions.get('screen').width
 //https://mobidevzoneshopapi.herokuapp.com/api/products
 
 const HomeScreen = ({ navigation, route }) => {
     const [products, setProducts] = useState([])
-
+    const dispatch = useDispatch()
     useEffect(() => {
         // fetch('https://mobidevzoneshopapi.herokuapp.com/api/products')
         //     .then((response) => response.json())
@@ -81,6 +33,43 @@ const HomeScreen = ({ navigation, route }) => {
         getProductList()
 
     }, [])
+
+    const saveToCart = (item) => {
+        item.qty = 1
+        AsyncStorage.getItem('cart').then((res) => {
+            console.log("Cart Data form Async...", res)
+            let cartProducts = JSON.parse(res)
+            let products = []
+            if(res == null){
+                products.push(item)
+                AsyncStorage.setItem('cart', JSON.stringify(products))
+                dispatch(cartAction.addToCart(products))
+            }else{
+                // cartData.push(product)
+                // AsyncStorage.setItem('cart', JSON.stringify(cartData))
+                // dispatch(cartAction.addToCart(cartData))
+
+                //cartProducts
+                let isInCart = null
+                for(let i = 0; i < cartProducts.length; i++){
+                    if(cartProducts[i]._id == item._id){
+                        cartProducts[i].qty += 1
+                        isInCart = item._id
+                    }
+                }
+                if(isInCart == null){
+                    cartProducts.push(item)
+                    AsyncStorage.setItem('cart', JSON.stringify(cartProducts))
+                    dispatch(cartAction.addToCart(cartProducts))
+                }else{
+                    AsyncStorage.setItem('cart', JSON.stringify(cartProducts))
+                    dispatch(cartAction.addToCart(cartProducts))
+                }
+            }
+
+        })
+        console.log("Selected Product...", item)
+    }
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -111,13 +100,13 @@ const HomeScreen = ({ navigation, route }) => {
                                     <Text style={{ fontSize: 14, color: colors.primaryColor, marginTop: 5 }}>(Made in Myanmar)</Text>
                                     <Text style={{ marginTop: 15, fontSize: 16, color: colors.primaryColor }}>{item.price}</Text>
                                 </View>
-                                <View style={{
+                                <TouchableOpacity onPress={() => saveToCart(item)} style={{
                                     borderTopLeftRadius: 10, borderBottomRightRadius: 10, paddingVertical: 8,
                                     paddingHorizontal: 25, position: 'absolute', bottom: 0, right: 0,
                                     backgroundColor: colors.primaryColor, justifyContent: 'center', alignItems: 'center'
                                 }}>
-                                    <Text style={{ color: colors.white, fontSize: 14, fontWeight: 'bold' }}>Buy</Text>
-                                </View>
+                                    <Text style={{ color: colors.white, fontSize: 14, fontWeight: 'bold' }}>Add To Cart</Text>
+                                </TouchableOpacity>
                             </TouchableOpacity>
                         )
                     }}

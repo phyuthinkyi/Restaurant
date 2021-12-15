@@ -10,8 +10,7 @@ const App = () => {
   return(
     <Provider store={Store} >
       <Navigator />
-    </Provider>
-     
+    </Provider> 
   )
 }
 

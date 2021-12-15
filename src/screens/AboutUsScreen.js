@@ -42,7 +42,7 @@ const AboutUsScreen = ({ navigation, route }) => {
           <Text style={styles.aboutUsText}>Contact Us</Text>
         </View>
 
-        <View style={{padding: 20}}>
+        {/* <View style={{padding: 20}}>
             <TextInput
                 style={{height: 45, borderColor:'#000', borderWidth: 1}}
                 onChangeText={text => setData(text)}
@@ -65,9 +65,9 @@ const AboutUsScreen = ({ navigation, route }) => {
               <Text>Remove Data from Async Storage</Text>
             </TouchableOpacity>
             <Text style={{marginVertical: 15}}>{collectData}</Text>
-        </View>
+        </View> */}
 
-        {/* {
+        {
           arr.map((item, index) => {
             return (
               <View key={index} style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 15, paddingVertical: 10, marginTop: 10, }}>
@@ -76,7 +76,7 @@ const AboutUsScreen = ({ navigation, route }) => {
               </View>
             )
           })
-        } */}
+        }
 
       </View>
     </SafeAreaView>

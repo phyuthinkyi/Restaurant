@@ -6,7 +6,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import dataAction from '../store/actions/data'
 
 const ContactUsScreen = ({ navigation, route }) => {
-  const [data, setData] = useState("")
+  const [data, setData] = useState("") //
+  const [prods, setProds] = useState([])//
   const dispatch = useDispatch()
   const collectData = useSelector(state => state.Data)
 
@@ -14,7 +15,6 @@ const ContactUsScreen = ({ navigation, route }) => {
   const saveToState = (data) => {
     dispatch(dataAction.SaveData(data))
   }
-
   const changeState = () => {
     dispatch(dataAction.RemoveData())
   }
@@ -23,7 +23,8 @@ const ContactUsScreen = ({ navigation, route }) => {
     <SafeAreaView style={styles.container}>
       <HeaderComponent navigation={navigation} menu="back" title="Contact Us" />
       <View style={styles.content}>
-        <View style={{ padding: 20 }}>
+
+        {/* <View style={{ padding: 20 }}>
           <TextInput
             style={{ height: 45, borderColor: '#000', borderWidth: 1 }}
             onChangeText={text => setData(text)}
@@ -47,8 +48,11 @@ const ContactUsScreen = ({ navigation, route }) => {
             <Text>Remove Data from State</Text>
           </TouchableOpacity>
           <Text style={{ marginVertical: 15 }}>{collectData}</Text>
-        </View>
-        {/* <View style={styles.contactUsContainer}>
+        </View> */}
+
+
+
+        <View style={styles.contactUsContainer}>
           <Image style={styles.contactUsImg}
             source={require('../../assets/images/icons/contact.png')} />
           <Text style={styles.contactUsText}>Contact Us</Text>
@@ -70,7 +74,7 @@ const ContactUsScreen = ({ navigation, route }) => {
           source={require('../../assets/images/icons/time.png')} />
           <Text style={styles.infoText}>Open Time - 9 : 00 AM</Text>
           <Text style={styles.infoText}>Close Time - 6 : 00 PM</Text>
-        </View> */}
+        </View>
 
       </View>
     </SafeAreaView>
