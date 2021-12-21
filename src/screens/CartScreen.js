@@ -3,28 +3,16 @@ import { SafeAreaView, View, Text, FlatList, TouchableOpacity, Image, Dimensions
 import HeaderComponent from "../components/HeaderComponent";
 import colors from "../constants/colors";
 import BottomTabComponent from "../components/BottomTabComponent";
-import {useSelector} from 'react-redux'
+import { useDispatch, useSelector} from 'react-redux'
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import cartAction from "../store/actions/cart";
+import qtyAction from "../store/actions/qty";
 const width = Dimensions.get('screen').width
-const prodList = [
-    {
-        prodName: 'Pumpkin Soup',
-        image: require('../../assets/images/profile.jpeg'),
-        madeIn: 'Myanmar',
-        price: '1500 MMK',
-        arr: ['arr1', 'arr2', 'arr3']
-    },
-    {
-        prodName: 'Vegetable Soup',
-        image: require('../../assets/images/profile.jpeg'),
-        madeIn: 'Thailand',
-        price: '2500 MMK',
-        arr: ['arr1', 'arr2', 'arr3']
-    }
-   
-]
+
 
 const CartScreen = ({ navigation, route }) => {
     const products = useSelector(state => state.Cart)
+    const dispatch =  useDispatch()
     console.log("Cart Screen Products...", products)
 
     return (
@@ -66,7 +54,12 @@ const CartScreen = ({ navigation, route }) => {
                     keyExtractor={(item, index) => index.toString()}
                     showsVerticalScrollIndicator={false}
                     ListFooterComponent={
-                        <TouchableOpacity style={{ marginVertical: 15, height: 50, backgroundColor: colors.primaryColor, justifyContent: 'center', alignItems: 'center' }}>
+                        <TouchableOpacity onPress={() => {
+                            AsyncStorage.removeItem('cart')
+                            dispatch(cartAction.addToCart([]))
+                            AsyncStorage.removeItem('cartQty')
+                            dispatch(qtyAction.setTotalQty(0))
+                        }} style={{ marginVertical: 15, height: 50, backgroundColor: colors.primaryColor, justifyContent: 'center', alignItems: 'center' }}>
                             <Text style={{ color: colors.white, fontSize: 16, fontWeight: 'bold' }}>Shopping</Text>
                         </TouchableOpacity>
                     }

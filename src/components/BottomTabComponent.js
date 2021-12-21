@@ -1,9 +1,35 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { View, TouchableOpacity, Text, Image, Dimensions, StyleSheet } from 'react-native'
 import colors from "../constants/colors";
+import {useSelector, useDispatch} from 'react-redux'
+import qtyAction from "../store/actions/qty";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const width = Dimensions.get('screen').width
 
 const BottomTabComponent = ({ navigation, screenName }) => {
+  const qty = useSelector(state => state.Qty)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    
+   async function getQty() {
+      let qtyData = await AsyncStorage.getItem('cartQty')
+      let qty = JSON.parse(qtyData)
+      if(qty == null){
+        dispatch(qtyAction.setTotalQty(0))
+        AsyncStorage.setItem('cartQty', JSON.stringify(0))
+      }else{
+        dispatch(qtyAction.setTotalQty(qty))
+        AsyncStorage.setItem('cartQty', JSON.stringify(qty))
+      }
+    }
+
+    getQty()
+
+  }, [navigation, qty])
+
+
+
   return (
     <View style={styles.bottomTabContainer}>
       <TouchableOpacity onPress={() => navigation.navigate('Home')} style={styles.bottomTabContent}>
@@ -15,14 +41,13 @@ const BottomTabComponent = ({ navigation, screenName }) => {
         <Image source={require('../../assets/images/icons/cart.png')}
           style={[styles.bottomTabIcon, { tintColor: screenName == "Cart" ? '#C95227' : 'gray' }]} />
         
-        <View style={{
+      { qty != 0 &&  <View style={{
           position: 'absolute', top: -5, right: 0, marginTop: 5, borderRadius: 11,
           marginRight: width / 8 - 22, width: 22, height: 22, justifyContent: 'center', alignItems: 'center',
           backgroundColor: 'green'
         }}>
-          
-          <Text style={{ fontSize: 12, color: colors.white }}>16</Text>
-        </View>
+           <Text style={{ fontSize: 12, color: colors.white }}>{qty}</Text>
+        </View>}
         <Text style={[styles.bottomTabTitle, { color: screenName == "Cart" ? '#C95227' : 'gray' }]}>Cart</Text>
 
       </TouchableOpacity>

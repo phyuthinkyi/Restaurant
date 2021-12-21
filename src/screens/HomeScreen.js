@@ -3,8 +3,9 @@ import { SafeAreaView, View, Text, Image, Dimensions, FlatList, TouchableOpacity
 import HeraderComponent from "../components/HeaderComponent";
 import BottomTabComponent from "../components/BottomTabComponent";
 import colors from "../constants/colors";
-import {useDispatch} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import cartAction from "../store/actions/cart";
+import qtyAction from "../store/actions/qty";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const width = Dimensions.get('screen').width
@@ -14,22 +15,11 @@ const HomeScreen = ({ navigation, route }) => {
     const [products, setProducts] = useState([])
     const dispatch = useDispatch()
     useEffect(() => {
-        // fetch('https://mobidevzoneshopapi.herokuapp.com/api/products')
-        //     .then((response) => response.json())
-        //     .then((prods) => {
-        //         console.log("Products Data...", prods)
-        //         setProducts(prods)
-        //     })
-        //     .catch((error) => {
-        //         console.error(error);
-        //     });
-
         const getProductList = async () => {
             const response  = await fetch('https://mobidevzoneshopapi.herokuapp.com/api/products')
             const resData = await response.json()  
              setProducts(resData)
         }
-
         getProductList()
 
     }, [])
@@ -40,18 +30,17 @@ const HomeScreen = ({ navigation, route }) => {
             console.log("Cart Data form Async...", res)
             let cartProducts = JSON.parse(res)
             let products = []
-            if(res == null){
+            if(cartProducts == null){
                 products.push(item)
                 AsyncStorage.setItem('cart', JSON.stringify(products))
                 dispatch(cartAction.addToCart(products))
+                AsyncStorage.setItem('cartQty', JSON.stringify(1))
+                dispatch(qtyAction.setTotalQty(1))
             }else{
-                // cartData.push(product)
-                // AsyncStorage.setItem('cart', JSON.stringify(cartData))
-                // dispatch(cartAction.addToCart(cartData))
-
-                //cartProducts
                 let isInCart = null
+                let totQty = item.qty;
                 for(let i = 0; i < cartProducts.length; i++){
+                    totQty += cartProducts[i].qty
                     if(cartProducts[i]._id == item._id){
                         cartProducts[i].qty += 1
                         isInCart = item._id
@@ -61,9 +50,13 @@ const HomeScreen = ({ navigation, route }) => {
                     cartProducts.push(item)
                     AsyncStorage.setItem('cart', JSON.stringify(cartProducts))
                     dispatch(cartAction.addToCart(cartProducts))
+                    AsyncStorage.setItem('cartQty', JSON.stringify(totQty))
+                    dispatch(qtyAction.setTotalQty(totQty))
                 }else{
                     AsyncStorage.setItem('cart', JSON.stringify(cartProducts))
                     dispatch(cartAction.addToCart(cartProducts))
+                    AsyncStorage.setItem('cartQty', JSON.stringify(totQty))
+                    dispatch(qtyAction.setTotalQty(totQty))
                 }
             }
 
