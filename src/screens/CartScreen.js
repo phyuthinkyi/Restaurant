@@ -13,7 +13,7 @@ const width = Dimensions.get('screen').width
 const CartScreen = ({ navigation, route }) => {
     const products = useSelector(state => state.Cart)
     const dispatch =  useDispatch()
-    console.log("Cart Screen Products...", products)
+  //  console.log("Cart Screen Products...", products)
 
     return (
         <SafeAreaView style={{ flex: 1 }}>

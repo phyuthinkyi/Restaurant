@@ -3,7 +3,7 @@ import { SafeAreaView, View, Text, Image, Dimensions, FlatList, TouchableOpacity
 import HeraderComponent from "../components/HeaderComponent";
 import BottomTabComponent from "../components/BottomTabComponent";
 import colors from "../constants/colors";
-import {useDispatch, useSelector} from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import cartAction from "../store/actions/cart";
 import qtyAction from "../store/actions/qty";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -16,9 +16,9 @@ const HomeScreen = ({ navigation, route }) => {
     const dispatch = useDispatch()
     useEffect(() => {
         const getProductList = async () => {
-            const response  = await fetch('https://mobidevzoneshopapi.herokuapp.com/api/products')
-            const resData = await response.json()  
-             setProducts(resData)
+            const response = await fetch('https://mobidevzoneshopapi.herokuapp.com/api/products')
+            const resData = await response.json()
+            setProducts(resData)
         }
         getProductList()
 
@@ -30,38 +30,38 @@ const HomeScreen = ({ navigation, route }) => {
             console.log("Cart Data form Async...", res)
             let cartProducts = JSON.parse(res)
             let products = []
-            if(cartProducts == null){
+            if (cartProducts == null) {
                 products.push(item)
                 AsyncStorage.setItem('cart', JSON.stringify(products))
                 dispatch(cartAction.addToCart(products))
                 AsyncStorage.setItem('cartQty', JSON.stringify(1))
                 dispatch(qtyAction.setTotalQty(1))
-            }else{
+            } else {
                 let isInCart = null
                 let totQty = item.qty;
-                for(let i = 0; i < cartProducts.length; i++){
+                for (let i = 0; i < cartProducts.length; i++) {
                     totQty += cartProducts[i].qty
-                    if(cartProducts[i]._id == item._id){
+                    if (cartProducts[i]._id == item._id) {
                         cartProducts[i].qty += 1
                         isInCart = item._id
                     }
                 }
-                if(isInCart == null){
+
+                AsyncStorage.setItem('cartQty', JSON.stringify(totQty))
+                dispatch(qtyAction.setTotalQty(totQty))
+
+                if (isInCart == null) {
                     cartProducts.push(item)
                     AsyncStorage.setItem('cart', JSON.stringify(cartProducts))
                     dispatch(cartAction.addToCart(cartProducts))
-                    AsyncStorage.setItem('cartQty', JSON.stringify(totQty))
-                    dispatch(qtyAction.setTotalQty(totQty))
-                }else{
+                } else {
                     AsyncStorage.setItem('cart', JSON.stringify(cartProducts))
                     dispatch(cartAction.addToCart(cartProducts))
-                    AsyncStorage.setItem('cartQty', JSON.stringify(totQty))
-                    dispatch(qtyAction.setTotalQty(totQty))
                 }
+
             }
 
         })
-        console.log("Selected Product...", item)
     }
 
     return (

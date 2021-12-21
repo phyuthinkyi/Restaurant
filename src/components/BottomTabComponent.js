@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import { View, TouchableOpacity, Text, Image, Dimensions, StyleSheet } from 'react-native'
 import colors from "../constants/colors";
 import {useSelector, useDispatch} from 'react-redux'
@@ -10,8 +10,8 @@ const BottomTabComponent = ({ navigation, screenName }) => {
   const qty = useSelector(state => state.Qty)
   const dispatch = useDispatch()
 
+
   useEffect(() => {
-    
    async function getQty() {
       let qtyData = await AsyncStorage.getItem('cartQty')
       let qty = JSON.parse(qtyData)
@@ -23,7 +23,6 @@ const BottomTabComponent = ({ navigation, screenName }) => {
         AsyncStorage.setItem('cartQty', JSON.stringify(qty))
       }
     }
-
     getQty()
 
   }, [navigation, qty])
