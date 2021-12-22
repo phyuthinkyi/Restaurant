@@ -1,25 +1,99 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { SafeAreaView, View, Text, FlatList, TouchableOpacity, Image, Dimensions } from 'react-native'
 import HeaderComponent from "../components/HeaderComponent";
 import colors from "../constants/colors";
 import BottomTabComponent from "../components/BottomTabComponent";
-import { useDispatch, useSelector} from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import cartAction from "../store/actions/cart";
 import qtyAction from "../store/actions/qty";
 const width = Dimensions.get('screen').width
 
-
 const CartScreen = ({ navigation, route }) => {
     const products = useSelector(state => state.Cart)
-    const dispatch =  useDispatch()
-  //  console.log("Cart Screen Products...", products)
+    const totQty = useSelector(state => state.Qty)
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        const getProducts = async () => {
+            let cartData = await AsyncStorage.getItem('cart')
+            let prods = JSON.parse(cartData)
+
+            if (prods == null) {
+                dispatch(cartAction.addToCart([]))
+                AsyncStorage.setItem('cart', JSON.stringify([]))
+            } else {
+                dispatch(cartAction.addToCart(prods))
+                AsyncStorage.setItem('cart', JSON.stringify(prods))
+            }
+        }
+
+        const getQty = async () => {
+            let qtyData = await AsyncStorage.getItem('cartQty')
+            let qty = JSON.parse(qtyData)
+
+            if (qty == null) {
+                dispatch(qtyAction.setTotalQty(0))
+                AsyncStorage.setItem('cartQty', JSON.stringify(0))
+            } else {
+                dispatch(cartAction.addToCart(qty))
+                AsyncStorage.setItem('cartQty', JSON.stringify(qty))
+            }
+        }
+
+        getQty()
+        getProducts()
+    }, [])
+
+    const clickMinus = (minProd) => {
+        let index = products.findIndex(prod => prod == minProd)
+        if(products[index].qty > 1){
+            products[index].qty -= 1
+
+            dispatch(cartAction.addToCart(products))
+            AsyncStorage.setItem('cart', JSON.stringify(products))
+
+            dispatch(qtyAction.setTotalQty(totQty - 1))
+            AsyncStorage.setItem('cartQty', JSON.stringify(totQty - 1))
+        }else{
+            deleteHandle(minProd)
+        }
+        console.log("INdex...", index)
+    }
+
+    const deleteHandle = (item) => {
+        let index = products.findIndex(prod => prod == item)
+        let leftData = []
+
+        AsyncStorage.getItem('cart').then((data) => {
+            let cartData = JSON.parse(data)
+            if(cartData == null){
+                dispatch(cartAction.addToCart([]))
+                AsyncStorage.setItem('cart', JSON.stringify([]))
+                dispatch(qtyAction.setTotalQty(0))
+                AsyncStorage.setItem('cartQty', JSON.stringify(0))
+            }else{
+                for(let i=0; i<cartData.length; i++){
+                    if(cartData[i]._id != item._id){
+                        leftData.push(cartData[i])
+                    }
+                }
+                console.log("letf Data...", leftData)
+                dispatch(cartAction.addToCart(leftData))
+                AsyncStorage.setItem('cart', JSON.stringify(leftData))
+
+                dispatch(qtyAction.setTotalQty(totQty - products[index].qty))
+                AsyncStorage.setItem('cartQty', JSON.stringify(totQty - products[index].qty))
+
+            }
+        })
+    }
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <HeaderComponent navigation={navigation} title="Cart" iconName="menu" />
             <View style={{ flex: 1, paddingHorizontal: 18 }}>
-                <FlatList
+                {products?.length > 0 ? <FlatList
                     style={{ flex: 1 }}
                     data={products}
                     renderItem={({ item, index }) => {
@@ -32,7 +106,7 @@ const CartScreen = ({ navigation, route }) => {
                                     width: width / 4 + 10, height: width / 4 + 10, borderRadius: 10,
                                     justifyContent: 'center', alignItems: 'center'
                                 }}>
-                                    <Image source={{uri: item.imgUrl}} resizeMode="cover" style={{
+                                    <Image source={{ uri: item.imgUrl }} resizeMode="cover" style={{
                                         width: "100%", height: "100%",
                                         borderRadius: 10
                                     }} />
@@ -42,7 +116,11 @@ const CartScreen = ({ navigation, route }) => {
                                     <Text style={{ fontSize: 14, color: colors.primaryColor }}>(Made in Myanmar)</Text>
                                     <Text style={{ marginTop: 15, fontSize: 16, color: colors.primaryColor }}>{item.price}</Text>
                                     <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 15, marginLeft: 10 }}>
-                                        <Image source={require('../../assets/images/icons/minus.png')} style={{ width: 35, height: 35 }} />
+                                        <TouchableOpacity onPress={() => {
+                                            clickMinus(item)
+                                        }}>
+                                            <Image source={require('../../assets/images/icons/minus.png')} style={{ width: 35, height: 35 }} />
+                                        </TouchableOpacity>
                                         <Text style={{ marginHorizontal: 8 }}>{item.qty}</Text>
                                         <Image source={require('../../assets/images/icons/plus.png')} style={{ width: 35, height: 35 }} />
                                     </View>
@@ -63,7 +141,9 @@ const CartScreen = ({ navigation, route }) => {
                             <Text style={{ color: colors.white, fontSize: 16, fontWeight: 'bold' }}>Shopping</Text>
                         </TouchableOpacity>
                     }
-                />
+                /> : <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <Text>There is no product in your cart!</Text>
+                </View>}
 
 
             </View>
