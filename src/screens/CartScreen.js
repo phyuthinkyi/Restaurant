@@ -47,7 +47,7 @@ const CartScreen = ({ navigation, route }) => {
 
     const clickMinus = (minProd) => {
         let index = products.findIndex(prod => prod == minProd)
-        if(products[index].qty > 1){
+        if (products[index].qty > 1) {
             products[index].qty -= 1
 
             dispatch(cartAction.addToCart(products))
@@ -55,10 +55,21 @@ const CartScreen = ({ navigation, route }) => {
 
             dispatch(qtyAction.setTotalQty(totQty - 1))
             AsyncStorage.setItem('cartQty', JSON.stringify(totQty - 1))
-        }else{
+        } else {
             deleteHandle(minProd)
         }
         console.log("INdex...", index)
+    }
+
+    const clickPlus = (plusProd) => {
+        let index = products.findIndex(prod => prod == plusProd)
+        products[index].qty += 1
+
+        dispatch(cartAction.addToCart(products))
+        AsyncStorage.setItem('cart', JSON.stringify(products))
+
+        dispatch(qtyAction.setTotalQty(totQty + 1))
+        AsyncStorage.setItem('cartQty', JSON.stringify(totQty + 1))
     }
 
     const deleteHandle = (item) => {
@@ -67,14 +78,14 @@ const CartScreen = ({ navigation, route }) => {
 
         AsyncStorage.getItem('cart').then((data) => {
             let cartData = JSON.parse(data)
-            if(cartData == null){
+            if (cartData == null) {
                 dispatch(cartAction.addToCart([]))
                 AsyncStorage.setItem('cart', JSON.stringify([]))
                 dispatch(qtyAction.setTotalQty(0))
                 AsyncStorage.setItem('cartQty', JSON.stringify(0))
-            }else{
-                for(let i=0; i<cartData.length; i++){
-                    if(cartData[i]._id != item._id){
+            } else {
+                for (let i = 0; i < cartData.length; i++) {
+                    if (cartData[i]._id != item._id) {
                         leftData.push(cartData[i])
                     }
                 }
@@ -122,7 +133,11 @@ const CartScreen = ({ navigation, route }) => {
                                             <Image source={require('../../assets/images/icons/minus.png')} style={{ width: 35, height: 35 }} />
                                         </TouchableOpacity>
                                         <Text style={{ marginHorizontal: 8 }}>{item.qty}</Text>
-                                        <Image source={require('../../assets/images/icons/plus.png')} style={{ width: 35, height: 35 }} />
+                                        <TouchableOpacity onPress={() => {
+                                            clickPlus(item)
+                                        }}>
+                                            <Image source={require('../../assets/images/icons/plus.png')} style={{ width: 35, height: 35 }} />
+                                        </TouchableOpacity>
                                     </View>
                                 </View>
 

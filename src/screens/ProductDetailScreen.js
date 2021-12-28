@@ -1,12 +1,57 @@
-import React from 'react'
-import { SafeAreaView, View, Text, Image, ScrollView, StyleSheet, Dimensions } from 'react-native'
+import React, {useState} from 'react'
+import { SafeAreaView, View, Text, Image, ScrollView, StyleSheet, Dimensions, TouchableOpacity } from 'react-native'
 import HeaderComponent from '../components/HeaderComponent'
 import color from '../constants/colors'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useDispatch } from 'react-redux'
+import cartAction from '../store/actions/cart'
+import qtyAction from '../store/actions/qty'
+
 const width = Dimensions.get('screen').width
 
 const ProductDetailScreen = ({ navigation, route }) => {
   console.log("Route Data..", route)
+  const [qty, setQty] = useState(1)
+  const dispatch = useDispatch()
   let {product} = route.params
+
+
+  const saveToCart = (item) => {
+    item.qty = qty
+    AsyncStorage.getItem('cart').then((res) => {
+      let cartData = JSON.parse(res)
+      let products = [];
+      if(cartData == null){
+        products.push(item)
+        AsyncStorage.setItem('cart', JSON.stringify(products))
+        dispatch(cartAction.addToCart(products))
+
+        AsyncStorage.setItem('cartQty', JSON.stringify(item.qty))
+        dispatch(qtyAction.setTotalQty(item.qty))
+      }else{
+        let cartId = null
+        let totQty = item.qty
+
+        for(let i=0; i<cartData.length; i++){
+          totQty += cartData[i].qty
+          if(item._id == cartData[i]._id){
+            cartId = item._id
+            cartData[i].qty += item.qty
+          }
+        }
+        if(cartId == null){
+          cartData.push(item)
+        }
+        AsyncStorage.setItem('cart', JSON.stringify(cartData))
+        dispatch(cartAction.addToCart(cartData))
+        AsyncStorage.setItem('cartQty', JSON.stringify(totQty))
+        dispatch(qtyAction.setTotalQty(totQty))
+        setQty(1)
+      }
+    })
+
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <HeaderComponent navigation={navigation} title="Product Detail" menu="back" />
@@ -31,13 +76,23 @@ const ProductDetailScreen = ({ navigation, route }) => {
 
           <View style={[styles.addToCartContainer, styles.cardContainer]}>
             <View style={styles.qtyContainer}>
-              <Image style={styles.increaseIcon} source={require('../../assets/images/icons/minus.png')} />
-              <Text style={styles.qtyText}>1</Text>
-              <Image style={styles.increaseIcon} source={require('../../assets/images/icons/minus.png')} />
+             <TouchableOpacity onPress={() => {
+                if(qty > 1){
+                  setQty(qty - 1)
+                }
+             }}>
+             <Image style={styles.increaseIcon} source={require('../../assets/images/icons/minus.png')} />
+             </TouchableOpacity>
+              <Text style={styles.qtyText}>{qty}</Text>
+             <TouchableOpacity onPress={() => {
+                setQty(qty + 1)
+             }}>
+             <Image style={styles.increaseIcon} source={require('../../assets/images/icons/plus.png')} />
+             </TouchableOpacity>
             </View>
-            <View style={styles.btnCartContainer}>
+            <TouchableOpacity onPress={() => saveToCart(product) } style={styles.btnCartContainer}>
               <Text style={styles.cartText}>Add to Cart</Text>
-            </View>
+            </TouchableOpacity>
           </View>
 
           <View style={styles.cardContainer}>

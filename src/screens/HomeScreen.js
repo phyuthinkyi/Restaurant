@@ -46,18 +46,13 @@ const HomeScreen = ({ navigation, route }) => {
                         isInCart = item._id
                     }
                 }
-
+                if (isInCart == null) {
+                    cartProducts.push(item) 
+                } 
+                AsyncStorage.setItem('cart', JSON.stringify(cartProducts))
+                dispatch(cartAction.addToCart(cartProducts))
                 AsyncStorage.setItem('cartQty', JSON.stringify(totQty))
                 dispatch(qtyAction.setTotalQty(totQty))
-
-                if (isInCart == null) {
-                    cartProducts.push(item)
-                    AsyncStorage.setItem('cart', JSON.stringify(cartProducts))
-                    dispatch(cartAction.addToCart(cartProducts))
-                } else {
-                    AsyncStorage.setItem('cart', JSON.stringify(cartProducts))
-                    dispatch(cartAction.addToCart(cartProducts))
-                }
 
             }
 
