@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import { SafeAreaView, View, Text, Image, ScrollView, StyleSheet, Dimensions, TouchableOpacity } from 'react-native'
 import HeaderComponent from '../components/HeaderComponent'
 import color from '../constants/colors'
@@ -6,6 +6,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useDispatch } from 'react-redux'
 import cartAction from '../store/actions/cart'
 import qtyAction from '../store/actions/qty'
+import wishlistAction from '../store/actions/wishlist'
+
 
 const width = Dimensions.get('screen').width
 
@@ -13,7 +15,7 @@ const ProductDetailScreen = ({ navigation, route }) => {
   console.log("Route Data..", route)
   const [qty, setQty] = useState(1)
   const dispatch = useDispatch()
-  let {product} = route.params
+  let { product } = route.params
 
 
   const saveToCart = (item) => {
@@ -21,25 +23,25 @@ const ProductDetailScreen = ({ navigation, route }) => {
     AsyncStorage.getItem('cart').then((res) => {
       let cartData = JSON.parse(res)
       let products = [];
-      if(cartData == null){
+      if (cartData == null) {
         products.push(item)
         AsyncStorage.setItem('cart', JSON.stringify(products))
         dispatch(cartAction.addToCart(products))
 
         AsyncStorage.setItem('cartQty', JSON.stringify(item.qty))
         dispatch(qtyAction.setTotalQty(item.qty))
-      }else{
+      } else {
         let cartId = null
         let totQty = item.qty
 
-        for(let i=0; i<cartData.length; i++){
+        for (let i = 0; i < cartData.length; i++) {
           totQty += cartData[i].qty
-          if(item._id == cartData[i]._id){
+          if (item._id == cartData[i]._id) {
             cartId = item._id
             cartData[i].qty += item.qty
           }
         }
-        if(cartId == null){
+        if (cartId == null) {
           cartData.push(item)
         }
         AsyncStorage.setItem('cart', JSON.stringify(cartData))
@@ -52,6 +54,35 @@ const ProductDetailScreen = ({ navigation, route }) => {
 
   }
 
+  const addToWishList = (product) => {
+    AsyncStorage.getItem('wishlist').then((res) => {
+      const wishListData = JSON.parse(res)
+      let products = []
+      if(wishListData == null){
+        products.push(product)
+        
+        dispatch(wishlistAction.addToWishList(products))
+        AsyncStorage.setItem('wishlist', JSON.stringify(products))
+      }else{
+        let isWishListId = null
+        for(let i=0; i<wishListData.length; i++){
+          if(wishListData[i]._id == product._id){
+              isWishListId = product._id
+          }
+        }
+
+        console.log("Is ID null...?", isWishListId)
+        if(isWishListId == null){
+          wishListData.push(product)
+        }
+
+        AsyncStorage.setItem('wishlist', JSON.stringify(wishListData))
+        dispatch(wishlistAction.addToWishList(wishListData))
+
+      }
+    })
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <HeaderComponent navigation={navigation} title="Product Detail" menu="back" />
@@ -59,38 +90,40 @@ const ProductDetailScreen = ({ navigation, route }) => {
         <View style={styles.context}>
           <View
             style={styles.imgContainer}>
-            <Image source={{uri: product.imgUrl}}
+            <Image source={{ uri: product.imgUrl }}
               style={styles.img} />
           </View>
 
           <View style={styles.cardContainer}>
             <View style={styles.addToCartContainer}>
               <Text style={styles.title}>{product.productName}</Text>
-              <Image style={styles.heatIcon} source={require('../../assets/images/icons/heart.png')} />
+              <TouchableOpacity onPress={() => addToWishList(product)}>
+                <Image style={styles.heatIcon} source={require('../../assets/images/icons/heart.png')} />
+              </TouchableOpacity>
             </View>
             <View style={styles.priceContainer}>
-             { !product.discount == 0 && <Text style={styles.normalPriceText}>{product.price} MMK</Text>}
+              {!product.discount == 0 && <Text style={styles.normalPriceText}>{product.price} MMK</Text>}
               <Text style={styles.discPrice}>{product.price - product.discount} MMK</Text>
             </View>
           </View>
 
           <View style={[styles.addToCartContainer, styles.cardContainer]}>
             <View style={styles.qtyContainer}>
-             <TouchableOpacity onPress={() => {
-                if(qty > 1){
+              <TouchableOpacity onPress={() => {
+                if (qty > 1) {
                   setQty(qty - 1)
                 }
-             }}>
-             <Image style={styles.increaseIcon} source={require('../../assets/images/icons/minus.png')} />
-             </TouchableOpacity>
+              }}>
+                <Image style={styles.increaseIcon} source={require('../../assets/images/icons/minus.png')} />
+              </TouchableOpacity>
               <Text style={styles.qtyText}>{qty}</Text>
-             <TouchableOpacity onPress={() => {
+              <TouchableOpacity onPress={() => {
                 setQty(qty + 1)
-             }}>
-             <Image style={styles.increaseIcon} source={require('../../assets/images/icons/plus.png')} />
-             </TouchableOpacity>
+              }}>
+                <Image style={styles.increaseIcon} source={require('../../assets/images/icons/plus.png')} />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={() => saveToCart(product) } style={styles.btnCartContainer}>
+            <TouchableOpacity onPress={() => saveToCart(product)} style={styles.btnCartContainer}>
               <Text style={styles.cartText}>Add to Cart</Text>
             </TouchableOpacity>
           </View>

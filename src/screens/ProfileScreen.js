@@ -49,6 +49,7 @@ const ProfileScreen = ({ navigation, route }) => {
             </TouchableOpacity>
             <TouchableOpacity onPress={() => {
               console.log("Click")
+              navigation.navigate('WishList')
             }} style={styles.labelContainer}>
               <Image style={{ width: 25, height: 30, tintColor: color.primaryColor }}
                 source={require('../../assets/images/icons/heart.png')} />

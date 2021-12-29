@@ -13,6 +13,7 @@ import OrderDetailScreen from '../screens/OrderDetailScreen'
 import ProductDetailScreen from '../screens/ProductDetailScreen'
 import ProfileScreen from '../screens/ProfileScreen'
 import DrawerCustomComponent from './DarwerComponent'
+import WishListScreen from '../screens/WishListScreen'
 
 const Drawer = createDrawerNavigator()
 
@@ -34,6 +35,7 @@ const Navigator = () => {
         <Drawer.Screen name="OrderDetail" component={OrderDetailScreen} />
         <Drawer.Screen name="ProductDetail" component={ProductDetailScreen} />
         <Drawer.Screen name="Profile" component={ProfileScreen} />
+        <Drawer.Screen name="WishList" component={WishListScreen} />
       </Drawer.Navigator>
 
     </NavigationContainer>
