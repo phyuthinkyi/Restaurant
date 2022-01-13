@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { SafeAreaView, View, Text, Image, ScrollView, StyleSheet, Dimensions, TouchableOpacity } from 'react-native'
 import HeaderComponent from '../components/HeaderComponent'
 import color from '../constants/colors'
@@ -8,15 +8,34 @@ import cartAction from '../store/actions/cart'
 import qtyAction from '../store/actions/qty'
 import wishlistAction from '../store/actions/wishlist'
 
-
 const width = Dimensions.get('screen').width
-
 const ProductDetailScreen = ({ navigation, route }) => {
   console.log("Route Data..", route)
   const [qty, setQty] = useState(1)
+  const [isInWishlist, setIsInWishlist] = useState(false)
   const dispatch = useDispatch()
   let { product } = route.params
 
+  useEffect(() => {
+    AsyncStorage.getItem('wishlist').then((res) => {
+      const wishListData = JSON.parse(res)
+      if(wishListData == null ){
+          setIsInWishlist(false)
+      }else{
+        let isWishListId = null
+        for(let i=0; i<wishListData.length; i++){
+          if(wishListData[i]._id == product._id){
+            isWishListId = product._id
+          }
+        }
+        if(isWishListId != null){
+          setIsInWishlist(true)
+        }else{
+          setIsInWishlist(false)
+        }
+      }
+    })
+  }, [route])
 
   const saveToCart = (item) => {
     item.qty = qty
@@ -55,32 +74,45 @@ const ProductDetailScreen = ({ navigation, route }) => {
   }
 
   const addToWishList = (product) => {
-    AsyncStorage.getItem('wishlist').then((res) => {
-      const wishListData = JSON.parse(res)
-      let products = []
-      if(wishListData == null){
-        products.push(product)
-        
-        dispatch(wishlistAction.addToWishList(products))
+    if(isInWishlist){
+      AsyncStorage.getItem('wishlist').then((res) => {
+        const wishListData = JSON.parse(res)
+        let products = []
+        if(wishListData != null){
+          products = wishListData.filter(prod => prod._id != product._id)
+        }
         AsyncStorage.setItem('wishlist', JSON.stringify(products))
-      }else{
-        let isWishListId = null
-        for(let i=0; i<wishListData.length; i++){
-          if(wishListData[i]._id == product._id){
-              isWishListId = product._id
+        dispatch(wishlistAction.addToWishList(products))
+      })
+      setIsInWishlist(false)
+    }else{
+      AsyncStorage.getItem('wishlist').then((res) => {
+        const wishListData = JSON.parse(res)
+        let products = []
+        if(wishListData == null){
+          products.push(product)
+          
+          dispatch(wishlistAction.addToWishList(products))
+          AsyncStorage.setItem('wishlist', JSON.stringify(products))
+        }else{
+          let isWishListId = null
+          for(let i=0; i<wishListData.length; i++){
+            if(wishListData[i]._id == product._id){
+                isWishListId = product._id
+            }
           }
+          console.log("Is ID null...?", isWishListId)
+          if(isWishListId == null){
+            wishListData.push(product)
+          }
+  
+          AsyncStorage.setItem('wishlist', JSON.stringify(wishListData))
+          dispatch(wishlistAction.addToWishList(wishListData))
+  
         }
-
-        console.log("Is ID null...?", isWishListId)
-        if(isWishListId == null){
-          wishListData.push(product)
-        }
-
-        AsyncStorage.setItem('wishlist', JSON.stringify(wishListData))
-        dispatch(wishlistAction.addToWishList(wishListData))
-
-      }
-    })
+        setIsInWishlist(true)
+      })
+    }
   }
 
   return (
@@ -98,7 +130,8 @@ const ProductDetailScreen = ({ navigation, route }) => {
             <View style={styles.addToCartContainer}>
               <Text style={styles.title}>{product.productName}</Text>
               <TouchableOpacity onPress={() => addToWishList(product)}>
-                <Image style={styles.heatIcon} source={require('../../assets/images/icons/heart.png')} />
+               {isInWishlist ? <Image style={styles.heatIcon} source={require('../../assets/images/icons/cart.png')} /> : 
+               <Image style={styles.heatIcon} source={require('../../assets/images/icons/heart.png')} />}
               </TouchableOpacity>
             </View>
             <View style={styles.priceContainer}>

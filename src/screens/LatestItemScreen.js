@@ -3,56 +3,6 @@ import { SafeAreaView, View, Text, Image, TouchableOpacity, FlatList, StyleSheet
 import HeaderComponent from '../components/HeaderComponent'
 import color from '../constants/colors'
 const width = Dimensions.get('screen').width
-const prodList = [
-    {
-        prodName: 'Pumpkin Soup',
-        image: require('../../assets/images/profile.jpeg'),
-        madeIn: 'Myanmar',
-        price: '1500 MMK',
-    },
-    {
-        prodName: 'Vegetable Soup',
-        image: require('../../assets/images/profile.jpeg'),
-        madeIn: 'Thailand',
-        price: '2500 MMK',
-    },
-    {
-        prodName: 'Pumpkin Soup Made In Myanmar',
-        image: require('../../assets/images/profile.jpeg'),
-        madeIn: 'Myanmar',
-        price: '1500 MMK',
-    },
-    {
-        prodName: 'Vegetable Soup',
-        image: require('../../assets/images/profile.jpeg'),
-        madeIn: 'Thailand',
-        price: '2500 MMK',
-    },
-    {
-        prodName: 'Pumpkin Soup',
-        image: require('../../assets/images/profile.jpeg'),
-        madeIn: 'Myanmar',
-        price: '1500 MMK',
-    },
-    {
-        prodName: 'Vegetable Soup',
-        image: require('../../assets/images/profile.jpeg'),
-        madeIn: 'Thailand',
-        price: '2500 MMK',
-    },
-    {
-        prodName: 'Pumpkin Soup',
-        image: require('../../assets/images/profile.jpeg'),
-        madeIn: 'Myanmar',
-        price: '1500 MMK',
-    },
-    {
-        prodName: 'Vegetable Soup',
-        image: require('../../assets/images/profile.jpeg'),
-        madeIn: 'Thailand',
-        price: '2500 MMK',
-    }
-]
 const LatestItemScreen = ({ navigation, route }) => {
     const [latestProducts, setLatestproducts] = useState([])
 
