@@ -13,6 +13,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 // https://myshop-6c5af.firebaseio.com/aboutus.json
 // https://myshop-6c5af.firebaseio.com/contactus.json
+// https://myshop-6c5af.firebaseio.com/orders.json
 
 const AboutUsScreen = ({ navigation, route }) => {
   const [data, setData] = useState("")

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { SafeAreaView, View, Text, Image, StyleSheet, TextInput, TouchableOpacity } from 'react-native'
 import HeaderComponent from '../components/HeaderComponent'
 import color from '../constants/colors'
@@ -8,6 +8,7 @@ import dataAction from '../store/actions/data'
 const ContactUsScreen = ({ navigation, route }) => {
   const [data, setData] = useState("") //
   const [prods, setProds] = useState([])//
+  const [contactUs, setContactUs] = useState({})
   const dispatch = useDispatch()
   const collectData = useSelector(state => state.Data)
 
@@ -19,61 +20,46 @@ const ContactUsScreen = ({ navigation, route }) => {
     dispatch(dataAction.RemoveData())
   }
 
+  useEffect(() => {
+    const getContactUs = async () => {
+      const response = await fetch('https://myshop-6c5af.firebaseio.com/contactus.json')
+      const resData = await response.json();
+      let contactusData = {};
+      for (const key in resData) {
+        contactusData = resData[key]
+      }
+      setContactUs(contactusData)
+      console.log("Contact  Us...", contactusData)
+    }
+    getContactUs()
+  }, [])
+
   return (
     <SafeAreaView style={styles.container}>
       <HeaderComponent navigation={navigation} iconName="menu" title="Contact Us" />
       <View style={styles.content}>
-
-        {/* <View style={{ padding: 20 }}>
-          <TextInput
-            style={{ height: 45, borderColor: '#000', borderWidth: 1 }}
-            onChangeText={text => setData(text)}
-          />
-          <TouchableOpacity onPress={() => {
-            saveToState(data)
-          }}
-            style={{
-              marginVertical: 20, paddingVertical: 8, paddingHorizontal: 18, justifyContent: 'center',
-              alignItems: 'center', backgroundColor: '#33aacc'
-            }}>
-            <Text>Save to State</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => {
-            changeState()
-          }} style={{
-            marginVertical: 20, paddingVertical: 8, paddingHorizontal: 18,
-            justifyContent: 'center', alignItems: 'center', backgroundColor: '#33aacc'
-          }}>
-            <Text>Remove Data from State</Text>
-          </TouchableOpacity>
-          <Text style={{ marginVertical: 15 }}>{collectData}</Text>
-        </View> */}
-
-
-
-        <View style={styles.contactUsContainer}>
+      <View style={styles.contactUsContainer}>
           <Image style={styles.contactUsImg}
             source={require('../../assets/images/icons/contact.png')} />
           <Text style={styles.contactUsText}>Contact Us</Text>
         </View>
         <View style={styles.contactUsInfoContainer}>
-          <Image style={styles.infoImg} 
-          source={require('../../assets/images/icons/marker.png')} />
-          <Text style={styles.infoText}>No.403, 4th Floor, Diamond Condo, Tower A, Kamayut Tsp, Yangon, Myanmar</Text>
+          <Image style={styles.infoImg}
+            source={require('../../assets/images/icons/marker.png')} />
+          <Text style={styles.infoText}>{contactUs?.address}</Text>
 
-          <Image style={styles.infoImg} 
-          source={require('../../assets/images/icons/phone.png')} />
-          <Text style={styles.infoText}>(+959) 9798882724</Text>
+          <Image style={styles.infoImg}
+            source={require('../../assets/images/icons/phone.png')} />
+          <Text style={styles.infoText}>{contactUs?.mobile}</Text>
 
-          <Image style={styles.infoImg} 
-          source={require('../../assets/images/icons/email.png')} />
-          <Text style={styles.infoText}>mobidevzonetech@gmail.com</Text>
+          <Image style={styles.infoImg}
+            source={require('../../assets/images/icons/email.png')} />
+          <Text style={styles.infoText}>{contactUs?.email}</Text>
 
-          <Image style={styles.infoImg} 
-          source={require('../../assets/images/icons/time.png')} />
-          <Text style={styles.infoText}>Open Time - 9 : 00 AM</Text>
-          <Text style={styles.infoText}>Close Time - 6 : 00 PM</Text>
+          <Image style={styles.infoImg}
+            source={require('../../assets/images/icons/time.png')} />
+          <Text style={styles.infoText}>Open Time - {contactUs?.openTime}</Text>
+          <Text style={styles.infoText}>Close Time - {contactUs?.closeTime}</Text>
         </View>
 
       </View>
@@ -124,6 +110,31 @@ const styles = StyleSheet.create({
   }
 
 })
+/* <View style={{ padding: 20 }}>
+          <TextInput
+            style={{ height: 45, borderColor: '#000', borderWidth: 1 }}
+            onChangeText={text => setData(text)}
+          />
+          <TouchableOpacity onPress={() => {
+            saveToState(data)
+          }}
+            style={{
+              marginVertical: 20, paddingVertical: 8, paddingHorizontal: 18, justifyContent: 'center',
+              alignItems: 'center', backgroundColor: '#33aacc'
+            }}>
+            <Text>Save to State</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => {
+            changeState()
+          }} style={{
+            marginVertical: 20, paddingVertical: 8, paddingHorizontal: 18,
+            justifyContent: 'center', alignItems: 'center', backgroundColor: '#33aacc'
+          }}>
+            <Text>Remove Data from State</Text>
+          </TouchableOpacity>
+          <Text style={{ marginVertical: 15 }}>{collectData}</Text>
+        </View> */
 
 
 
