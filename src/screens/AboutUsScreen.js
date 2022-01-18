@@ -1,19 +1,39 @@
-import React,{useState} from 'react'
+import React,{useState, useEffect} from 'react'
 import { SafeAreaView, View, Text, StyleSheet, Image, TextInput, TouchableOpacity} from 'react-native'
 import HeaderComponent from '../components/HeaderComponent'
 import color from '../constants/colors'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-const arr = [
-  "Mobile Software Development Training Center",
-  "Practice and apply knowledge faster in real-world scenarios with projects and interactive courses.",
-  "Curate and share Pluralsight content to reach your learning goals faster.",
-  "We help you quickly and easily experiment, build UIs, add features, and fix bugs faster."
-]
+// const arr = [
+//   "Mobile Software Development Training Center",
+//   "Practice and apply knowledge faster in real-world scenarios with projects and interactive courses.",
+//   "Curate and share Pluralsight content to reach your learning goals faster.",
+//   "We help you quickly and easily experiment, build UIs, add features, and fix bugs faster."
+// ]
+
+// https://myshop-6c5af.firebaseio.com/aboutus.json
+// https://myshop-6c5af.firebaseio.com/contactus.json
 
 const AboutUsScreen = ({ navigation, route }) => {
   const [data, setData] = useState("")
   const [collectData, setCollectData] = useState("")
+  const [aboutUs, setAboutUs] = useState([])
+
+  useEffect(() => {
+    const getAboutUs = async () => {
+      const response = await fetch('https://myshop-6c5af.firebaseio.com/aboutus.json')
+      const resData =  await  response.json();
+      //console.log("About Us Data...", resData);
+      
+      const list = [];
+      for(const key in resData){
+        list.push(resData[key])
+      }
+      setAboutUs(list)
+
+    }
+    getAboutUs()
+  }, [])
 
   const saveToAsycStorage = (data) => {
     console.log("DATA is", data)
@@ -68,11 +88,11 @@ const AboutUsScreen = ({ navigation, route }) => {
         </View> */}
 
         {
-          arr.map((item, index) => {
+          aboutUs.map((item, index) => {
             return (
               <View key={index} style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 15, paddingVertical: 10, marginTop: 10, }}>
                 <View style={{ width: 20, height: 20, backgroundColor: color.primaryColor }}></View>
-                <Text style={{ flex: 1, marginLeft: 15, fontSize: 16, color: color.darkGray }}>{item}</Text>
+                <Text style={{ flex: 1, marginLeft: 15, fontSize: 16, color: color.darkGray }}>{item.description}</Text>
               </View>
             )
           })
