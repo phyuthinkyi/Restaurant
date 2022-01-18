@@ -23,8 +23,6 @@ const AboutUsScreen = ({ navigation, route }) => {
     const getAboutUs = async () => {
       const response = await fetch('https://myshop-6c5af.firebaseio.com/aboutus.json')
       const resData =  await  response.json();
-      //console.log("About Us Data...", resData);
-      
       const list = [];
       for(const key in resData){
         list.push(resData[key])

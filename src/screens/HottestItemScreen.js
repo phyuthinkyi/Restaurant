@@ -53,8 +53,8 @@ const HottestItemScreen = ({ navigation, route }) => {
                 products.push(item)
                 AsyncStorage.setItem('cart', JSON.stringify(products))
                 dispatch(cartAction.addToCart(products))
-                AsyncStorage.setItem('cartQty', JSON.stringify(1))
-                dispatch(qtyAction.setTotalQty(1))
+                AsyncStorage.setItem('cartQty', JSON.stringify(item.qty))
+                dispatch(qtyAction.setTotalQty(item.qty))
             } else {
                 let isInCart = null
                 let totQty = item.qty;
