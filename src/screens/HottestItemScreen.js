@@ -26,7 +26,6 @@ const HottestItemScreen = ({ navigation, route }) => {
         const resp = await fetch('https://mobidevzoneshopapi.herokuapp.com/api/products')
         const resData = await resp.json()
         resData.map((prod) => prod.qty = 1)
-        console.log("Minus Selected Productss..", item)
         if (item.qty > 1) {
             item.qty -= 1
             let index = resData.findIndex(prod => prod._id == item._id)
@@ -39,7 +38,6 @@ const HottestItemScreen = ({ navigation, route }) => {
         const resp = await fetch('https://mobidevzoneshopapi.herokuapp.com/api/products')
         const resData = await resp.json()
         resData.map((prod) => prod.qty = 1)
-        console.log("Selcted Product..", item)
         item.qty += 1
         let index = resData.findIndex(prod => prod._id == item._id)
         resData[index] = item
@@ -49,7 +47,6 @@ const HottestItemScreen = ({ navigation, route }) => {
 
     const saveToCart = (item) => {
         AsyncStorage.getItem('cart').then((res) => {
-            console.log("Cart Data form Async...", res)
             let cartProducts = JSON.parse(res)
             let products = []
             if (cartProducts == null) {
@@ -83,7 +80,7 @@ const HottestItemScreen = ({ navigation, route }) => {
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            <HeaderComponent navigation={navigation} menu="back" title="Hottest Items" />
+            <HeaderComponent navigation={navigation} iconName="menu" title="Hottest Items" />
             <View style={{ flex: 1 }}>
                 <FlatList
                     numColumns={2}
