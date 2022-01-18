@@ -22,7 +22,7 @@ const Navigator = () => {
     <NavigationContainer>
       <Drawer.Navigator
       screenOptions={{
-        headerShown: false
+        headerShown: false,
       }}
         drawerContent={(props) => <DrawerCustomComponent {...props} />}>
         <Drawer.Screen name="Home" component={HomeScreen} header />

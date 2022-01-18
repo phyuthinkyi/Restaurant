@@ -21,7 +21,7 @@ const ContactUsScreen = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <HeaderComponent navigation={navigation} menu="back" title="Contact Us" />
+      <HeaderComponent navigation={navigation} iconName="menu" title="Contact Us" />
       <View style={styles.content}>
 
         {/* <View style={{ padding: 20 }}>

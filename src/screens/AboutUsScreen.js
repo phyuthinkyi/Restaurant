@@ -34,7 +34,7 @@ const AboutUsScreen = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <HeaderComponent title="About Us" navigation={navigation} menu="back" />
+      <HeaderComponent title="About Us" navigation={navigation} iconName="menu" />
       <View style={styles.content}>
         <View style={styles.aboutUsContainer}>
           <Image style={styles.aboutUsImg}
