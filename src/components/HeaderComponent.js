@@ -1,7 +1,8 @@
 import React from "react";
 import { View, Text, Image, TouchableOpacity, Platform, StyleSheet } from 'react-native'
 
-const HeaderComponent = ({ navigation, title, iconName }) => {
+const HeaderComponent = ({ navigation, title, iconName, parentScreenName }) => {
+ // console.log("Icon Name", iconName, 'and Navigation Route..', navigation, 'and pre screen', preScreen)
   return (
     <View style={styles.headerContainer}>
       {
@@ -10,7 +11,9 @@ const HeaderComponent = ({ navigation, title, iconName }) => {
             <Image style={styles.headerIcon}
               source={require('../../assets/images/icons/menu.png')} />
           </TouchableOpacity> :
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity onPress={() => {
+            navigation.navigate(parentScreenName)
+          }}>
             <Image style={styles.headerIcon}
               source={require('../../assets/images/icons/back.png')} />
           </TouchableOpacity>

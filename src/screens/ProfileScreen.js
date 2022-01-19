@@ -9,7 +9,7 @@ const ProfileScreen = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <HeaderComponent navigation={navigation} title="Profile" menu="menu" />
+      <HeaderComponent navigation={navigation} title="Profile" iconName="menu" />
       <ScrollView style={{ marginBottom: 10 }} showsVerticalScrollIndicator={false}>
         <View style={{ flex: 1 }}>
           <View

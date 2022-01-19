@@ -81,7 +81,7 @@ const WishListScreen = ({ navigation, route }) => {
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            <HeraderComponent navigation={navigation} title="Wish List" iconName="back" />
+            <HeraderComponent navigation={navigation} title="Wish List" iconName="back"  parentScreenName="Profile"/>
             {products?.length > 0 ? <View style={{ flex: 1, paddingHorizontal: 18 }}>
                 {
                     products?.length > 0 && <View style={{ alignItems: 'flex-end' }}>
@@ -98,7 +98,8 @@ const WishListScreen = ({ navigation, route }) => {
                     renderItem={({ item, index }) => {
                         return (
                             <TouchableOpacity onPress={() => navigation.navigate('ProductDetail', {
-                                product: item
+                                product: item,
+                                parentScreen: 'WishList'
                             })} key={index} style={{
                                 flexDirection: 'row', backgroundColor: colors.white, borderRadius: 10,
                                 padding: 16, marginTop: 15

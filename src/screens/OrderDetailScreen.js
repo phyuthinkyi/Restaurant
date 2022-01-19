@@ -1,56 +1,18 @@
 import React from 'react'
-import { SafeAreaView, View, Text, StyleSheet, ScrollView, FlatList } from 'react-native'
+import { SafeAreaView, View, Text, StyleSheet, ScrollView, FlatList, TouchableOpacity } from 'react-native'
 import HeaderComponent from '../components/HeaderComponent'
 import color from '../constants/colors'
 
-const orderDetailData = {
-  date: '22 Jan 2021',
-  order_no: 'S001',
-  subTotal: 47500,
-  tax: 1000,
-  delivery: 2500,
-  prodList: [{
-    name: 'Burger (Made in Myanmar)',
-    qty: 2,
-    price: 1500,
-  },
-  {
-    name: 'Grilled cheese with tomato',
-    qty: 5,
-    price: 30000,
-  },
-  {
-    name: 'Pumpkin Soup',
-    qty: 1,
-    price: 5500,
-  },
-  {
-    name: 'Grilled Cheese',
-    qty: 2,
-    price: 6000,
-  },
-  {
-    name: 'Pumpkin Soup',
-    qty: 4,
-    price: 2000,
-  },
-  {
-    name: 'Pumpkin Soup',
-    qty: 2,
-    price: 1500,
-  },
-  ]
-}
-
-const OrderDetailScreen = ({ navigation }) => {
-
+const OrderDetailScreen = ({ navigation, route }) => {
+  console.log("Route Data Params..", route)
+  let orderDetailData = route?.params?.selectedOrder
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <HeaderComponent navigation={navigation} title="Order Detail" menu="back" />
+      <HeaderComponent navigation={navigation} title="Order Detail" iconName="back" parentScreenName="Order"/>
       <ScrollView>
         <View style={{ flex: 1, padding: 15 }}>
-          <Text style={styles.textRight}>{orderDetailData.date}</Text>
-          <Text style={styles.textBold}>{orderDetailData.order_no}</Text>
+          <Text style={styles.textRight}>{orderDetailData.orderDate}</Text>
+          <Text style={styles.textBold}>{orderDetailData.voucherNo}</Text>
 
           <View style={styles.titleRowContainer}>
             <Text style={[{ flex: 1 }, styles.textBold]}>Name</Text>
@@ -61,12 +23,11 @@ const OrderDetailScreen = ({ navigation }) => {
           <View style={styles.bigDivider} />
           {
 
-            orderDetailData.prodList.map((item, index) => {
-              console.log("Item", item)
+            orderDetailData?.porducts.map((item, index) => {
               return (
                 <View key={index}>
                   <View style={styles.titleRowContainer}>
-                    <Text style={[{ flex: 1 }, styles.textNormal]}>{item.name}</Text>
+                    <Text style={[{ flex: 1 }, styles.textNormal]}>{item.proudctName}</Text>
                     <Text style={[{ width: '15%', textAlign: 'center' }, styles.textNormal]}>{item.qty}</Text>
                     <Text style={[{ width: '20%' }, styles.textRight]}>{item.price}</Text>
                     <Text style={[{ width: '20%' }, styles.textRight]}>{item.qty * item.price}</Text>
@@ -84,7 +45,7 @@ const OrderDetailScreen = ({ navigation }) => {
               <Text style={styles.textRightBold}>Delivery -</Text>
             </View>
             <View style={{ marginLeft: 20 }}>
-              <Text style={styles.textRightBold}>{orderDetailData.subTotal}</Text>
+              <Text style={styles.textRightBold}>{orderDetailData.totalAmount}</Text>
               <Text style={styles.textRightBold}>{orderDetailData.tax}</Text>
               <Text style={styles.textRightBold}>{orderDetailData.delivery}</Text>
             </View>
@@ -92,7 +53,7 @@ const OrderDetailScreen = ({ navigation }) => {
           <View style={styles.bigDivider} />
           <View style={styles.subTotalContainer}>
             <Text style={styles.textRightBold}>Total - </Text>
-            <Text style={[styles.textRightBold, { marginLeft: 20 }]}>{orderDetailData.subTotal + orderDetailData.tax + orderDetailData.delivery}</Text>
+            <Text style={[styles.textRightBold, { marginLeft: 20 }]}>{orderDetailData.totalAmount + orderDetailData.tax + orderDetailData.delivery}</Text>
           </View>
           <View style={[{ marginTop: 5 }, styles.bigDivider]} />
         </View>

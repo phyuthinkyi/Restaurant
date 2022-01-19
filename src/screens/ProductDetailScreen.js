@@ -14,7 +14,7 @@ const ProductDetailScreen = ({ navigation, route }) => {
   const [qty, setQty] = useState(1)
   const [isInWishlist, setIsInWishlist] = useState(false)
   const dispatch = useDispatch()
-  let { product } = route.params
+  let { product, parentScreen } = route.params
 
   useEffect(() => {
     AsyncStorage.getItem('wishlist').then((res) => {
@@ -117,7 +117,7 @@ const ProductDetailScreen = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <HeaderComponent navigation={navigation} title="Product Detail" menu="back" />
+      <HeaderComponent navigation={navigation} title="Product Detail" iconName="back" parentScreenName={parentScreen} />
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.context}>
           <View

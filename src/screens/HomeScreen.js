@@ -69,7 +69,8 @@ const HomeScreen = ({ navigation, route }) => {
                     renderItem={({ item, index }) => {
                         return (
                             <TouchableOpacity onPress={() => navigation.navigate('ProductDetail', {
-                                product: item
+                                product: item,
+                                parentScreen: "Home"
                             })} key={index} style={{
                                 flexDirection: 'row', backgroundColor: colors.white, borderRadius: 10,
                                 padding: 16, marginTop: 15

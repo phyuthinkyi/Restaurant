@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import { SafeAreaView, View, Text, Image, TouchableOpacity, StyleSheet, FlatList } from 'react-native'
 import HeaderComponent from '../components/HeaderComponent'
 import BottomTabComponent from "../components/BottomTabComponent";
@@ -68,23 +68,42 @@ const order_list = [
 ]
 
 const OrderListScreen = ({ navigation, route }) => {
+  const [orderList, setOrderList] = useState([])
+  console.log("Route Name....", route)
+
+  useEffect(() => {
+    const getOrderList = async () => {
+      const response = await fetch('https://myshop-6c5af.firebaseio.com/orders.json');
+      const resData  = await response.json()
+      const list = [];
+      for(const key in resData){
+        list.push(resData[key])
+      }
+      setOrderList(list)
+      //console.log("order list", list)
+    }
+    getOrderList()
+  }, [])
+  
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <HeaderComponent navigation={navigation} title="Order List" menu="menu" />
+      <HeaderComponent navigation={navigation} title="Order List" iconName="menu" />
       <View style={{ flex: 1, marginTop: 15 }}>
         <FlatList
-          data={order_list}
+          data={orderList}
           renderItem={({ item, index }) => {
             return (
               <TouchableOpacity 
               onPress={() => {
-                navigation.navigate('OrderDetail')
+                navigation.navigate('OrderDetail', {
+                  selectedOrder: item
+                })
               }}
               style={styles.orderCard}>
-                <Text style={styles.date}>{item.date}</Text>
-                <Text style={styles.order_no}>{item.order_no}</Text>
+                <Text style={styles.date}>{item.orderDate}</Text>
+                <Text style={styles.order_no}>{item.voucherNo}</Text>
                 <View style={styles.totalContainer}>
-                  <Text style={styles.totalText}>Total - {item.total} MMK</Text>
+                  <Text style={styles.totalText}>Total - {item.totalAmount} MMK</Text>
                 
                   <View style={styles.rightArrowContainer}>
                     <Image style={styles.rightArrowIcon}
