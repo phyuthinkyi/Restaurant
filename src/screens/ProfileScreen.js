@@ -3,9 +3,27 @@ import { SafeAreaView, View, Text, Image, StyleSheet, Dimensions, TouchableOpaci
 import HeaderComponent from '../components/HeaderComponent'
 import BottomTabComponent from '../components/BottomTabComponent'
 import color from '../constants/colors'
+//https://myshop-6c5af.firebaseio.com/profile.json
 
 const ProfileScreen = ({ navigation, route }) => {
   const [modalVisible, setModalVisible] = useState(false)
+  const [profileData, setProfileData] = useState({})
+
+  useEffect(() => {
+    const getProfileData = async () => {
+      const response = await fetch('https://myshop-6c5af.firebaseio.com/profile.json')
+      const resData = await response.json();
+      console.log('Profile Data..', resData);
+      let profileData = {}
+      for(const key in resData){
+        profileData = resData[key]
+      }
+      setProfileData(profileData)
+      //console.log('Modified Profile Data....', profileData)
+    }
+    getProfileData()
+
+  }, [])
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -17,25 +35,25 @@ const ProfileScreen = ({ navigation, route }) => {
             <View style={styles.userImgContainer}>
               <Image style={styles.userImg} source={require('../../assets/images/profile.jpeg')} />
             </View>
-            <Text style={styles.userInfo}>Phyu Thin Kyi (University of Computer Studies, Meiktila)</Text>
-            <Text style={styles.userInfo}>09798882724</Text>
+            <Text style={styles.userInfo}>{profileData?.name} ({profileData?.school})</Text>
+            <Text style={styles.userInfo}>{profileData?.phone}</Text>
           </View>
 
           <View style={styles.profileCard}>
             <View style={styles.phoneContainer}>
               <Text style={styles.phoneLabel}>Phone</Text>
-              <Text style={styles.phoneValue}>09xxxxxxxxx</Text>
+              <Text style={styles.phoneValue}>{profileData?.phone}</Text>
             </View>
             <View style={styles.divider} />
             <View style={styles.phoneContainer}>
               <Text style={styles.phoneLabel}>Email</Text>
-              <Text style={styles.phoneValue}>phyuthinkyicu@gmail.com</Text>
+              <Text style={styles.phoneValue}>{profileData?.email}</Text>
             </View>
           </View>
 
           <View style={styles.profileCard}>
             <Text style={styles.phoneLabel}>Address</Text>
-            <Text style={{ marginTop: 10, fontSize: 16, color: color.darkGray }}>Diamond Condo, Tower A, 4th Floor, No. 403, Kamayut Township, Yangon, Myanmar</Text>
+            <Text style={{ marginTop: 10, fontSize: 16, color: color.darkGray }}>{profileData?.address}</Text>
           </View>
 
           <View style={styles.profileCard}>
