@@ -4,6 +4,7 @@ import HeaderComponent from '../components/HeaderComponent'
 import BottomTabComponent from '../components/BottomTabComponent'
 import color from '../constants/colors'
 //https://myshop-6c5af.firebaseio.com/profile.json
+//https://mobidevzoneshopapi.herokuapp.com/api/users
 
 const ProfileScreen = ({ navigation, route }) => {
   const [modalVisible, setModalVisible] = useState(false)

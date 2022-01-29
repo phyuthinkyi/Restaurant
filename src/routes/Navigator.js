@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createDrawerNavigator, DrawerContentScrollView } from '@react-navigation/drawer'
@@ -14,10 +14,19 @@ import ProductDetailScreen from '../screens/ProductDetailScreen'
 import ProfileScreen from '../screens/ProfileScreen'
 import DrawerCustomComponent from './DarwerComponent'
 import WishListScreen from '../screens/WishListScreen'
+import LoginScreen from '../screens/LoginScreen'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const Drawer = createDrawerNavigator()
 
 const Navigator = () => {
+const [isUser, setIsUser] = useState(false)
+AsyncStorage.getItem('loginuser').then(res => {
+  let user = JSON.parse(res);
+  if(user != null){
+    setIsUser(true)
+  }
+})
   return (
     <NavigationContainer>
       <Drawer.Navigator
@@ -25,7 +34,8 @@ const Navigator = () => {
         headerShown: false,
       }}
         drawerContent={(props) => <DrawerCustomComponent {...props} />}>
-        <Drawer.Screen name="Home" component={HomeScreen} header />
+        {!isUser &&<Drawer.Screen name="Login" component={LoginScreen} />}
+        <Drawer.Screen name="Home" component={HomeScreen} />
         <Drawer.Screen name="Cart" component={CartScreen} />
         <Drawer.Screen name="AboutUs" component={AboutUsScreen} />
         <Drawer.Screen name="ContactUs" component={ContactUsScreen} />

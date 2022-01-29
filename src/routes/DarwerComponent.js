@@ -2,10 +2,19 @@ import React, { useState, useEffect } from 'react'
 import { DrawerContentScrollView } from '@react-navigation/drawer'
 import { View, TouchableOpacity, Text, Image, StyleSheet, Dimensions, Modal } from 'react-native'
 import colors from '../constants/colors'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import {useDispatch} from 'react-redux'
+import loginAction from '../store/actions/login'
 
 const DrawerCustomComponent = (props) => {
   const [showDialog, setShowDialog] = useState(false)
-
+  const dispatch = useDispatch()
+  const logoutHandle = (props) => {
+    AsyncStorage.removeItem('loginuser')
+    dispatch(loginAction.login(null))
+    props.navigation.navigate('Login')
+    setShowDialog(false)
+  }
   return (
     <DrawerContentScrollView {...props}>
       <View style={styles.container}>
@@ -58,7 +67,7 @@ const DrawerCustomComponent = (props) => {
               <Text style={styles.existText}>Are you sure want to exit?</Text>
 
               <View style={styles.modalBtnContainer}>
-                <TouchableOpacity style={styles.modalBtn}>
+                <TouchableOpacity onPress={() => logoutHandle(props)} style={styles.modalBtn}>
                   <Text style={styles.modalBtnText}>Yes</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => setShowDialog(false)}
