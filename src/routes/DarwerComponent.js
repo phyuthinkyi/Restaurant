@@ -8,7 +8,7 @@ import loginAction from '../store/actions/login'
 
 const DrawerCustomComponent = (props) => {
   const [showDialog, setShowDialog] = useState(false)
-
+  //const [user, setUser] = useState(null)
   // AsyncStorage.getItem('loginuser').then(res => {
   //   let user = JSON.parse(res);
   //   if(user != null){

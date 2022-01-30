@@ -9,18 +9,6 @@ const LoginScreen = ({ navigation, route }) => {
   const [username, setUserName] = useState('')
   const [pass, setPass] = useState('')
   const dispatch = useDispatch()
-  const user = useSelector(state => state.Login)
-
-  // useEffect(() => {
-  //   AsyncStorage.getItem('loginuser').then(res => {
-  //     let user = JSON.parse(res);
-  //     if(user != null){
-  //       AsyncStorage.setItem('loginuser', JSON.stringify(user))
-  //       dispatch(loginAction.login(user))
-  //       navigation.navigate('Home')
-  //     }
-  //   })
-  // }, [])
 
   const loginHandle = async () => {
     //console.log('Type Data...', username, 'and pass ', pass)
