@@ -14,7 +14,7 @@ const width = Dimensions.get('screen').width
 const HomeScreen = ({ navigation, route }) => {
     const [products, setProducts] = useState([])
     const dispatch = useDispatch()
-    
+
     useEffect(() => {
         const getProductList = async () => {
             const response = await fetch('https://mobidevzoneshopapi.herokuapp.com/api/products')
@@ -23,9 +23,13 @@ const HomeScreen = ({ navigation, route }) => {
         }
         getProductList()
 
+        const backAction = () => {
+            return true;
+        };
+
         const backHandler = BackHandler.addEventListener(
             "hardwareBackPress",
-            () => true
+            backAction
         );
         return () => backHandler.remove();
 

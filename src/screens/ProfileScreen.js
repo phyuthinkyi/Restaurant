@@ -3,12 +3,16 @@ import { SafeAreaView, View, Text, Image, StyleSheet, Dimensions, TouchableOpaci
 import HeaderComponent from '../components/HeaderComponent'
 import BottomTabComponent from '../components/BottomTabComponent'
 import color from '../constants/colors'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import {useDispatch} from 'react-redux'
+import loginAction from '../store/actions/login'
 //https://myshop-6c5af.firebaseio.com/profile.json
 //https://mobidevzoneshopapi.herokuapp.com/api/users
 
 const ProfileScreen = ({ navigation, route }) => {
   const [modalVisible, setModalVisible] = useState(false)
   const [profileData, setProfileData] = useState({})
+  const dispatch  = useDispatch()
 
   useEffect(() => {
     const getProfileData = async () => {
@@ -16,7 +20,7 @@ const ProfileScreen = ({ navigation, route }) => {
       const resData = await response.json();
       console.log('Profile Data..', resData);
       let profileData = {}
-      for(const key in resData){
+      for (const key in resData) {
         profileData = resData[key]
       }
       setProfileData(profileData)
@@ -25,6 +29,13 @@ const ProfileScreen = ({ navigation, route }) => {
     getProfileData()
 
   }, [])
+
+  const logout = () => {
+    AsyncStorage.removeItem('loginuser')
+    dispatch(loginAction.login(null))
+    setModalVisible(false)
+    navigation.navigate('Login')
+  }
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -84,7 +95,7 @@ const ProfileScreen = ({ navigation, route }) => {
           </View>
         </View>
       </ScrollView>
-     
+
       <Modal
         transparent={true}
         animationType="none "
@@ -95,13 +106,14 @@ const ProfileScreen = ({ navigation, route }) => {
             <Text style={{ fontSize: 16, color: color.darkGray, marginTop: 10 }}>Are you sure want to exit?</Text>
             <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 }}>
               <TouchableOpacity
+                onPress={() => logout()}
                 style={{ width: '40%', backgroundColor: color.primaryColor, padding: 10, justifyContent: 'center', alignItems: 'center', borderRadius: 10 }}>
                 <Text style={{ color: color.white, fontWeight: 'bold' }}>Yes</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={{ width: '40%', backgroundColor: color.primaryColor, padding: 10, justifyContent: 'center', alignItems: 'center', borderRadius: 10 }}
                 onPress={() => {
-                    setModalVisible(false)
+                  setModalVisible(false)
                 }}
               >
                 <Text style={{ color: color.white, fontWeight: 'bold' }}>Cancel</Text>

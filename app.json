@@ -23,7 +23,7 @@
       "package": "com.mobidevzone.mobishop",
       "versionCode": 1,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/soup.png",
         "backgroundColor": "#FFFFFF"
       }
     },
