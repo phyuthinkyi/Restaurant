@@ -33,8 +33,8 @@ AsyncStorage.getItem('loginuser').then(res => {
       screenOptions={{
         headerShown: false,
       }}
-        drawerContent={(props) => <DrawerCustomComponent {...props} />}>
-        {!isUser &&<Drawer.Screen name="Login" component={LoginScreen} />}
+        drawerContent={(props) => <DrawerCustomComponent {...props}/>}>
+        {!isUser && <Drawer.Screen name="Login" component={LoginScreen} />}
         <Drawer.Screen name="Home" component={HomeScreen} />
         <Drawer.Screen name="Cart" component={CartScreen} />
         <Drawer.Screen name="AboutUs" component={AboutUsScreen} />

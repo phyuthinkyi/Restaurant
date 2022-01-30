@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "MobiShop",
+    "name": "Mobi Shop",
     "slug": "MobiShop",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/soup.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/mobi_splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -20,6 +20,8 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.mobidevzone.mobishop",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"

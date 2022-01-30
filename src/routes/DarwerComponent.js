@@ -3,11 +3,19 @@ import { DrawerContentScrollView } from '@react-navigation/drawer'
 import { View, TouchableOpacity, Text, Image, StyleSheet, Dimensions, Modal } from 'react-native'
 import colors from '../constants/colors'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {useDispatch} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import loginAction from '../store/actions/login'
 
 const DrawerCustomComponent = (props) => {
   const [showDialog, setShowDialog] = useState(false)
+
+  // AsyncStorage.getItem('loginuser').then(res => {
+  //   let user = JSON.parse(res);
+  //   if(user != null){
+  //     setUser(user)
+  //   }
+  // })
+
   const dispatch = useDispatch()
   const logoutHandle = (props) => {
     AsyncStorage.removeItem('loginuser')
@@ -15,6 +23,7 @@ const DrawerCustomComponent = (props) => {
     props.navigation.navigate('Login')
     setShowDialog(false)
   }
+
   return (
     <DrawerContentScrollView {...props}>
       <View style={styles.container}>
@@ -23,7 +32,7 @@ const DrawerCustomComponent = (props) => {
             <Image source={require('../../assets/images/profile.jpeg')} style={styles.profImg} />
           </View>
           <Text style={styles.profLabel}>Name</Text>
-          <Text style={styles.profLabel}>09797772725</Text>
+          <Text style={styles.profLabel}>09798882724</Text>
         </View>
 
         <TouchableOpacity onPress={() => props.navigation.navigate('Home')} style={styles.itemContainer}>

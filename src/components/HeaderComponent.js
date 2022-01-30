@@ -2,7 +2,6 @@ import React from "react";
 import { View, Text, Image, TouchableOpacity, Platform, StyleSheet } from 'react-native'
 
 const HeaderComponent = ({ navigation, title, iconName, parentScreenName }) => {
- // console.log("Icon Name", iconName, 'and Navigation Route..', navigation, 'and pre screen', preScreen)
   return (
     <View style={styles.headerContainer}>
       {
