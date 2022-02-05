@@ -16,6 +16,8 @@ import DrawerCustomComponent from './DarwerComponent'
 import WishListScreen from '../screens/WishListScreen'
 import LoginScreen from '../screens/LoginScreen'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import HomeClassScreen from '../screens/HomeClassScreen'
+import NextClassScreen from '../screens/NextClassScreen'
 
 const Drawer = createDrawerNavigator()
 
@@ -34,7 +36,9 @@ AsyncStorage.getItem('loginuser').then(res => {
         headerShown: false,
       }}
         drawerContent={(props) => <DrawerCustomComponent {...props}/>}>
-        {!isUser && <Drawer.Screen name="Login" component={LoginScreen} />}
+        {/* {!isUser && <Drawer.Screen name="Login" component={LoginScreen} />} */}
+        <Drawer.Screen name='HomeClass' component={HomeClassScreen} />
+        <Drawer.Screen name='NextClass' component={NextClassScreen} />
         <Drawer.Screen name="Home" component={HomeScreen} />
         <Drawer.Screen name="Cart" component={CartScreen} />
         <Drawer.Screen name="AboutUs" component={AboutUsScreen} />
